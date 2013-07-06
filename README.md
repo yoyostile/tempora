@@ -1,4 +1,4 @@
 tempora
 =======
 
-Tempora is a implicit collaborative recommender system
+Tempora is an implicit collaborative recommender system
