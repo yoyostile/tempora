@@ -1,5 +1,5 @@
+require "tempora/version"
+
 module Tempora
-  class << self
-    
-  end
+  # Your code goes here...
 end
