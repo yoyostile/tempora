@@ -1,5 +1,5 @@
 class TemporaMigration < ActiveRecord::Migration
-  
+
   # logger.id
   # logger.type
   # loggable.id
@@ -9,15 +9,14 @@ class TemporaMigration < ActiveRecord::Migration
   # controller
   # action
   # params
-  
-  
+
+
   def self.up
     create_table :logs do |t|
       t.references :logger, :polymorphic => true
-      t.references :tagger, :polymorphic => true
+      t.references :loggable, :polymorphic => true
       t.datetime :created_at
-      t.string :controller
-      t.string :action
+      t.string :event
       t.integer :weight
     end
   end
