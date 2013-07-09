@@ -3,6 +3,14 @@ $:.push File.expand_path("../lib", __FILE__)
 # Maintain your gem's version:
 require "tempora/version"
 
+rails_version = ENV["RAILS_VERSION"] || "default"
+rails = case rails_version
+when "default"
+  ">= 3.1.2"
+else
+  "~> #{rails_version}"
+end
+
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
   s.name        = "tempora"
@@ -16,7 +24,7 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["spec/**/*"]
 
-  s.add_dependency "rails", "~> 3.2.13"
+  s.add_dependency "rails", rails
 
   s.add_development_dependency "sqlite3"
   s.add_development_dependency "rspec-rails"
