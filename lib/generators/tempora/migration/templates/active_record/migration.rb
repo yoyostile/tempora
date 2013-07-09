@@ -1,16 +1,5 @@
 class TemporaMigration < ActiveRecord::Migration
 
-  # logger.id
-  # logger.type
-  # loggable.id
-  # loggable.type
-  # viewed_at
-  # view.duration
-  # controller
-  # action
-  # params
-
-
   def self.up
     create_table :logs do |t|
       t.references :logger, :polymorphic => true
@@ -22,6 +11,6 @@ class TemporaMigration < ActiveRecord::Migration
   end
 
   def self.down
-
+    drop_table :logs
   end
 end
