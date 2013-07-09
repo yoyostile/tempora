@@ -23,4 +23,12 @@ describe User do
     user.followings.count.should == 1
   end
 
+  it "should have an average weighting for an artist" do
+    artist = FactoryGirl.create :artist
+    user.log artist, weight: 10
+    user.log artist, weight: 5
+    avg = user.average_weight(artist)
+    avg.should == (15.0/2.0)
+  end
+
 end

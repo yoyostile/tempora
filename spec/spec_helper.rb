@@ -3,6 +3,7 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../dummy/config/environment", __FILE__)
 require 'rspec/rails'
 require 'rspec/autorun'
+require 'ruby-debug'
 require 'factory_girl_rails'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
@@ -38,10 +39,3 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = "random"
 end
-
-# def clean_database!
-#   models = [Tempora::Logging::Log, ]
-#   models.each do |model|
-#     ActiveRecord::Base.connection.execute "DELETE FROM #{model.table_name}"
-#   end
-# end

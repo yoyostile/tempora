@@ -20,6 +20,15 @@ module Tempora
         def is_loggable?
           true
         end
+
+        def type
+          self.class.to_s
+        end
+
+        def average_weight
+          weights = logs.pluck(:weight)
+          weights.inject{ |sum, f| sum + f }.to_f / weights.size
+        end
       end
     end
   end

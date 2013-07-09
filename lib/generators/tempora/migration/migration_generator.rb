@@ -30,7 +30,7 @@ module Tempora
     end
 
     def create_migration_file
-      if self.class.orgm_has_migration?
+      if self.class.orm_has_migration?
         migration_template 'migration.rb', 'db/migrate/tempora_migration'
       end
     end
