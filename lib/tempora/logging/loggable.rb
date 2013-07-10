@@ -3,12 +3,10 @@ module Tempora
     module Loggable
       extend ActiveSupport::Concern
 
-      included do
-      end
-
       module ClassMethods
         def acts_as_loggable(opts={})
           has_many :logs, as: :loggable, class_name: Tempora::Logging::Log
+          include LoggableMethods
         end
 
         def is_loggable?
@@ -16,7 +14,7 @@ module Tempora
         end
       end
 
-      module InstanceMethods
+      module LoggableMethods
         def is_loggable?
           true
         end
@@ -32,5 +30,3 @@ module Tempora
     end
   end
 end
-
-ActiveRecord::Base.send :include, Tempora::Logging::Loggable

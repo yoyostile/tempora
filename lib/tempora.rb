@@ -7,4 +7,5 @@ require "tempora/logging/log"
 
 if defined? ActiveRecord::Base
   ActiveRecord::Base.send :include, Tempora::Logging::Logger
+  ActiveRecord::Base.send :include, Tempora::Logging::Loggable
 end

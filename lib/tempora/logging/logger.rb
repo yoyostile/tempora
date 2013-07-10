@@ -1,15 +1,12 @@
 module Tempora
   module Logging
     module Logger
-      def self.included(base)
-        base.extend ClassMethods
-      end
+      extend ActiveSupport::Concern
 
       module ClassMethods
         def acts_as_logger(opts={})
           has_many :logs, as: :logger, class_name: Tempora::Logging::Log
-
-          include Tempora::Logging::Logger::InstanceMethods
+          include LoggerMethods
         end
 
         def is_logger?
@@ -17,7 +14,7 @@ module Tempora
         end
       end
 
-      module InstanceMethods
+      module LoggerMethods
         def log(loggable, opts={})
           return false unless loggable.respond_to?(:is_loggable?) && loggable.is_loggable?
           logs.create loggable: loggable, weight: opts[:weight], event: opts[:event]
