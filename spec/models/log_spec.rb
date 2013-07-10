@@ -8,7 +8,7 @@ describe Tempora::Logging::Log do
   it "should create a log" do
     artist.is_loggable?.should be_true
     user.log artist
-    Tempora::Logging::Log.count.should == 1 
+    Tempora::Logging::Log.count.should == 1
   end
 
   it "should have a logger and a loggable" do
