@@ -4,7 +4,9 @@ module Tempora
       belongs_to :loggable, :polymorphic => true
       belongs_to :logger, :polymorphic => true
 
-      attr_accessible :loggable, :weight, :event
+      if Rails.version < "4.0.0"
+        attr_accessible :loggable, :weight, :event
+      end
     end
   end
 end
