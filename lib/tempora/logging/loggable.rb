@@ -26,8 +26,7 @@ module Tempora
         end
 
         def average_weight
-          weights = logs.pluck(:weight)
-          weights.inject{ |sum, f| sum + f }.to_f / weights.size
+          weights = logs.average(:weight)
         end
       end
     end
