@@ -24,7 +24,9 @@ describe Tempora::Logging::Log do
   end
 
   it "should have an event name" do
-    user.log artist, weight: 10, event: 'view'
+    user.log  artist,
+              weight: 10,
+              event: 'view' if user
     user.logs.first.event.should == 'view'
   end
 end
