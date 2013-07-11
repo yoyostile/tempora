@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.email       = ["yoyostile@gmail.com"]
   s.homepage    = "https://github.com/yoyostile/tempora"
   s.summary     = "Tempora is an implict collaborative recommender system"
-  s.description = "TODO: Description of Tempora."
+  s.description = "Tempora is an implict collaborative recommender system"
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["spec/**/*"]
