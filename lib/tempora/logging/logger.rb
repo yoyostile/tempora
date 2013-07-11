@@ -21,7 +21,9 @@ module Tempora
         end
 
         def average_weight(loggable)
-          weights = logs.where('loggable_id = ? AND loggable_type = ?', loggable.id, loggable.type).average(:weight)
+          weights = logs.
+            where('loggable_id = ? AND loggable_type = ?', loggable.id, loggable.type).
+            average(:weight)
         end
 
         def is_logger?
