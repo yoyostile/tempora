@@ -22,10 +22,6 @@ module Tempora
         def type
           self.class.to_s
         end
-
-        def average_weight
-          weights = logs.average(:weight)
-        end
       end
     end
   end

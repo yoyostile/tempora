@@ -17,13 +17,7 @@ module Tempora
       module LoggerMethods
         def log(loggable, opts={})
           return false unless loggable.respond_to?(:is_loggable?) && loggable.is_loggable?
-          logs.create loggable: loggable, weight: opts[:weight], event: opts[:event]
-        end
-
-        def average_weight(loggable)
-          weights = logs.
-            where('loggable_id = ? AND loggable_type = ?', loggable.id, loggable.type).
-            average(:weight)
+          logs.create loggable: loggable, event: opts[:event]
         end
 
         def is_logger?

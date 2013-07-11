@@ -6,7 +6,6 @@ class TemporaMigration < ActiveRecord::Migration
       t.references :loggable, :polymorphic => true
       t.datetime :created_at
       t.string :event
-      t.integer :weight
     end
   end
 

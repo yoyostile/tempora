@@ -18,14 +18,8 @@ describe Tempora::Logging::Log do
     user.logs.first.loggable.should == artist
   end
 
-  it "should have a weight" do
-    user.log artist, weight: 10
-    user.logs.first.weight.should == 10
-  end
-
   it "should have an event name" do
     user.log  artist,
-              weight: 10,
               event: 'view' if user
     user.logs.first.event.should == 'view'
   end
