@@ -20,7 +20,8 @@ describe Tempora::Logging::Log do
 
   it "should have an event name" do
     user.log  artist,
-              event: 'view' if user
-    user.logs.first.event.should == 'view'
+              event: 'View' if user
+    user.logs.first.event.should_not == 'View'
+    user.logs.first.event.should == "#{artist.class.to_s}::View"
   end
 end

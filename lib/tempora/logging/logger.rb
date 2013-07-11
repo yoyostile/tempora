@@ -17,7 +17,7 @@ module Tempora
       module LoggerMethods
         def log(loggable, opts={})
           return false unless loggable.respond_to?(:is_loggable?) && loggable.is_loggable?
-          logs.create loggable: loggable, event: opts[:event]
+          logs.create loggable: loggable, event: "#{loggable.class.to_s}::#{opts[:event]}"
         end
 
         def is_logger?
