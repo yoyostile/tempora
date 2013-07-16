@@ -19,7 +19,6 @@ module Tempora
           ratings = {}
           loggable_class.find_each do |loggable|
             log = logger.logs.where(loggable_id: loggable.id, loggable_type: loggable.type)
-            byebug
             grouped_events = log.count(group: :event)
             grouped_events.each do |k, e|
               weight = Tempora::Logging::Event.find_by_name(k).try(:weight)
