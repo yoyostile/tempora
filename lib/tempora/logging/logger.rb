@@ -4,13 +4,30 @@ module Tempora
       extend ActiveSupport::Concern
 
       module ClassMethods
-        def acts_as_logger(opts={})
-          has_many :logs, as: :logger, class_name: Tempora::Logging::Log
-          include LoggerMethods
-        end
-
         def is_logger?
           false
+        end
+
+        def acts_as_logger(opts={})
+          has_many :logs, as: :logger, class_name: "Tempora::Logging::Log"
+          include LoggerMethods
+          extend LoggerClassMethods
+        end
+      end
+
+      module LoggerClassMethods
+        def is_logger?
+          true
+        end
+
+        def loggable_assoc
+          assoc = []
+          self.reflections.values.each do |ref|
+            if ref.klass.is_loggable?
+              assoc.push ref
+            end
+          end
+          assoc
         end
       end
 
@@ -22,6 +39,19 @@ module Tempora
 
         def is_logger?
           true
+        end
+
+        def is_loggable?
+          false
+        end
+
+        def assoc_with loggable
+          if loggable.is_loggable?
+            assoc = loggable.send(loggable.class.logger_assoc.select{
+              |a| a.klass == self.class
+            }.first.plural_name).find self rescue nil
+          end
+          assoc.present?
         end
       end
     end

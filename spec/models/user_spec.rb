@@ -12,8 +12,8 @@ describe User do
     user.is_logger?.should be_true
   end
 
-  it "class should not be logger" do
-    User.is_logger?.should_not be_true
+  it "class should be logger" do
+    User.is_logger?.should be_true
   end
 
   it "should have an artist" do

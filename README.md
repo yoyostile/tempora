@@ -12,6 +12,8 @@ And then execute:
 
     $ bundle
     $ rails g tempora:migration
+    # -s, [--skip]  => Skip files that already exist
+    # -f, [--force] => Overwrite files that already exist
     $ rake db:migrate
 
 ## Usage

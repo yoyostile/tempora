@@ -3,4 +3,8 @@ class Artist < ActiveRecord::Base
     attr_accessible :name, :slug
   end
   acts_as_loggable
+
+  has_many :users, through: :followings
+  has_many :followings
+
 end

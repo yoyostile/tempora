@@ -4,5 +4,5 @@ class User < ActiveRecord::Base
   end
   acts_as_logger
   has_many :followings, dependent: :destroy
-  has_many :artists, through: :following
+  has_many :artists, through: :followings
 end
