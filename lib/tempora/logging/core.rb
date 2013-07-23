@@ -3,6 +3,11 @@ module Tempora
     class Core
       MAX_RATING = 5
 
+      def self.process logger_class, loggable_class
+        self.process_weights
+        self.persist_hash self.generate_ratings logger_class, loggable_class
+      end
+
       def self.process_weights
         count_all = Tempora::Logging::Log.count
         Tempora::Logging::Log.group('event').pluck(:event).each do |event|

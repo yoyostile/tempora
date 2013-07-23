@@ -16,6 +16,14 @@ module Tempora
           raise Error, "Model is not loggable"
         end
       end
+
+      def nearest_neighbors_key logger
+        if logger.is_logger?
+          "#{logger_key(logger)}::NearestNeighbors"
+        else
+          raise Error, "Model is not logger"
+        end
+      end
     end
   end
 end

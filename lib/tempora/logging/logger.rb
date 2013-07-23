@@ -37,6 +37,10 @@ module Tempora
           logs.create loggable: loggable, event: "#{loggable.class.to_s}::#{opts[:event]}"
         end
 
+        def ratings
+          Tempora.redis.hgetall Tempora::KeyMapper.logger_key self
+        end
+
         def is_logger?
           true
         end

@@ -7,9 +7,12 @@ module Tempora
 
     attr_accessor :redis_namespace
 
+    attr_accessor :nearest_neighbors
+
     def initialize
       @redis = Redis.new
       @redis_namespace = "Tempora::#{Rails.env}"
+      @nearest_neighbors = 10
     end
   end
 
