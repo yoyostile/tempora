@@ -16,3 +16,7 @@ matrix:
   exclude:
     - rvm: 1.9.3
       gemfile: Gemfile
+      env: "RAILS_VERSION=3.2.13"
+    - rvm: 1.9.3
+      gemfile: Gemfile
+      env: "RAILS_VERSION=4.0.0"
