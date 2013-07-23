@@ -69,7 +69,6 @@ describe Tempora::Recommender::Core do
   it "should give a list with recommendations for an user" do
     generate_stuff
     list = Tempora::Recommender::Core.recommendation_list @user
-    byebug
     list.length.should > 0
   end
 
