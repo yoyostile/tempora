@@ -43,17 +43,17 @@ describe Tempora::Logging::Core do
     User.loggable_assoc.count.should > 0
     Artist.logger_assoc.count.should > 0
 
-    artist.assoc_with(user).should be_true
-    user.assoc_with(artist).should be_true
+    artist.assoc_with?(user).should be_true
+    user.assoc_with?(artist).should be_true
   end
 
   it 'should recognize no associations' do
     user = FactoryGirl.create(:user)
     artist = FactoryGirl.create(:artist)
     user1 = FactoryGirl.create(:user)
-    artist.assoc_with(user1).should be_false
-    user1.assoc_with(artist).should be_false
-    user.assoc_with(user1).should be_false
+    artist.assoc_with?(user1).should be_false
+    user1.assoc_with?(artist).should be_false
+    user.assoc_with?(user1).should be_false
   end
 
   it 'should raise an exception without weights' do
@@ -68,12 +68,44 @@ describe Tempora::Logging::Core do
 
   it 'should generate ratings' do
     user = FactoryGirl.create(:user)
+    user2 = FactoryGirl.create(:user)
     artist = FactoryGirl.create(:artist)
     artist2 = FactoryGirl.create(:artist)
     user.log artist, event: "Show"
     user.log artist, event: "Show"
     user.log artist2, event: "Follow"
+    Following.create artist: artist2, user: user
+    user2.log artist2, event: "Biography"
+    user2.log artist, event: "Show"
     Tempora::Logging::Core.process_weights
     Tempora::Logging::Core.generate_ratings User, Artist
+  end
+
+  it 'should recognize association without logs' do
+    user = FactoryGirl.create(:user)
+    artist = FactoryGirl.create(:artist)
+    Following.create artist: artist, user: user
+    Tempora::Logging::Core.process_weights
+    r = @redis
+    ratings = Tempora::Logging::Core.generate_ratings User, Artist
+    ratings["#{user.class}::#{user.id}"]["#{artist.class}::#{artist.id}"].should == Tempora::Logging::Core::MAX_RATING
+  end
+
+  it 'should persist ratings in redis' do
+    user = FactoryGirl.create(:user)
+    user2 = FactoryGirl.create(:user)
+    artist = FactoryGirl.create(:artist)
+    artist2 = FactoryGirl.create(:artist)
+    user.log artist, event: "Show"
+    user.log artist, event: "Show"
+    user.log artist2, event: "Follow"
+    Following.create artist: artist2, user: user
+    user2.log artist2, event: "Biography"
+    user2.log artist, event: "Show"
+    Tempora::Logging::Core.process_weights
+    ratings = Tempora::Logging::Core.generate_ratings User, Artist
+    Tempora::Logging::Core.persist_hash ratings
+    Tempora.redis.hgetall("#{Tempora.config.redis_namespace}::User::#{user.id}").length.should > 0
+    Tempora.redis.hgetall("#{Tempora.config.redis_namespace}::User::#{user2.id}").length.should > 0
   end
 end

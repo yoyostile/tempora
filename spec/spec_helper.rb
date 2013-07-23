@@ -38,4 +38,9 @@ RSpec.configure do |config|
   # the seed, which is printed after each run.
   #     --seed 1234
   config.order = "random"
+  config.before(:each) do
+    Tempora.redis.keys("#{Tempora.config.redis_namespace}").each do |k|
+      Tempora.redis.del k
+    end
+  end
 end

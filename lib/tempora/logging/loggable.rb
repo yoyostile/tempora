@@ -45,7 +45,7 @@ module Tempora
           self.class.to_s
         end
 
-        def assoc_with logger
+        def assoc_with? logger
           if logger.is_logger?
             assoc = logger.send(logger.class.loggable_assoc.select{
               |a| a.klass == self.class

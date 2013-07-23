@@ -45,7 +45,7 @@ module Tempora
           false
         end
 
-        def assoc_with loggable
+        def assoc_with? loggable
           if loggable.is_loggable?
             assoc = loggable.send(loggable.class.logger_assoc.select{
               |a| a.klass == self.class
