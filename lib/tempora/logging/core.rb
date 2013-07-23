@@ -30,10 +30,10 @@ module Tempora
             end
             if log.empty?
               r = MAX_RATING if logger.assoc_with? loggable
-              ratings["#{loggable_class}::#{loggable.id}"] = r
+              ratings["#{loggable_class}::#{loggable.id}"] = r if r
             end
           end
-          gl_ratings["#{logger_class}::#{logger.id}"] = ratings
+          gl_ratings[Tempora::KeyMapper.logger_key logger] = ratings if ratings.present?
         end
         gl_ratings
       end
@@ -41,7 +41,7 @@ module Tempora
       def self.persist_hash hash
         hash.each do |k, v|
           v.each do |i, j|
-            Tempora.redis.hset("#{Tempora.config.redis_namespace}::#{k}", i, j)
+            Tempora.redis.hset("#{k}", i, j)
           end
         end
       end
