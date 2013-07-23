@@ -11,14 +11,14 @@ module Tempora
       def self.process_weights
         count_all = Tempora::Logging::Log.count
         Tempora::Logging::Log.group('event').pluck(:event).each do |event|
-          e = Event.find_or_create_by_name event
+          e = Tempora::Logging::Event.find_or_create_by_name event
           count = Tempora::Logging::Log.where('event = ?', event).count
           e.update_attribute :weight, (count_all.to_f/count.to_f)
         end
       end
 
       def self.generate_ratings logger_class, loggable_class
-        if Event.count < Tempora::Logging::Log.group('event').count.count
+        if Tempora::Logging::Event.count < Tempora::Logging::Log.group('event').count.count
           raise Error, 'You should generate the weights table first'
         end
         gl_ratings = {}
