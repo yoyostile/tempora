@@ -12,3 +12,7 @@ script:
 gemfile:
   - Gemfile
   - Gemfile.ruby1.9
+matrix:
+  exclude:
+    - rvm: 1.9.3
+      gemfile: Gemfile
