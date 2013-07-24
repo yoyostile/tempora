@@ -1,6 +1,7 @@
 module Tempora
   module Logging
     class Log < ActiveRecord::Base
+      self.table_name = 'tempora_logs'
       belongs_to :loggable, :polymorphic => true
       belongs_to :logger, :polymorphic => true
 

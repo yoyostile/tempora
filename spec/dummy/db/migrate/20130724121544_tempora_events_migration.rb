@@ -1,7 +1,7 @@
 class TemporaEventsMigration < ActiveRecord::Migration
 
   def self.up
-    create_table :events do |t|
+    create_table :tempora_events do |t|
       t.string :name
       t.float :weight
       t.timestamps
@@ -9,6 +9,6 @@ class TemporaEventsMigration < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :events
+    drop_table :tempora_events
   end
 end

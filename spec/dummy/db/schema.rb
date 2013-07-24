@@ -11,18 +11,11 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130716085307) do
+ActiveRecord::Schema.define(:version => 20130724121544) do
 
   create_table "artists", :force => true do |t|
     t.string   "name"
     t.string   "slug"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  create_table "events", :force => true do |t|
-    t.string   "name"
-    t.float    "weight"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -36,7 +29,14 @@ ActiveRecord::Schema.define(:version => 20130716085307) do
 
   add_index "followings", ["user_id", "artist_id"], :name => "index_followings_on_user_id_and_artist_id", :unique => true
 
-  create_table "logs", :force => true do |t|
+  create_table "tempora_events", :force => true do |t|
+    t.string   "name"
+    t.float    "weight"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "tempora_logs", :force => true do |t|
     t.integer  "logger_id"
     t.string   "logger_type"
     t.integer  "loggable_id"

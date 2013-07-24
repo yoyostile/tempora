@@ -1,7 +1,7 @@
 class TemporaMigration < ActiveRecord::Migration
 
   def self.up
-    create_table :logs do |t|
+    create_table :tempora_logs do |t|
       t.references :logger, :polymorphic => true
       t.references :loggable, :polymorphic => true
       t.datetime :created_at
@@ -10,6 +10,6 @@ class TemporaMigration < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :logs
+    drop_table :tempora_logs
   end
 end
