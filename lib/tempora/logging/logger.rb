@@ -58,6 +58,10 @@ module Tempora
           assoc.present?
         end
 
+        def recommendation_list limit = 10
+          Tempora::Recommender::Core.recommendation_list self, limit
+        end
+
         def association_list loggable_class
           if loggable_class.is_loggable?
             assoc = self.send(self.class.loggable_assoc.select{ |a| a.klass == loggable_class }.first.plural_name)

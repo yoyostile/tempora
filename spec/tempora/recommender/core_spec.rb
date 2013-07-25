@@ -80,6 +80,16 @@ describe Tempora::Recommender::Core do
     list.length.should > 0
   end
 
+  it "should recommend artist2" do
+    Following.create artist: @artist, user: @user
+    Following.create artist: @artist2, user: @user
+    Following.create artist: @artist, user: @user2
+    Tempora::Logging::Core.process User, Artist
+    list = @user2.recommendation_list 10
+    list.length.should == 1
+    list.first.should == @artist2
+  end
+
 private
 
   def generate_stuff
