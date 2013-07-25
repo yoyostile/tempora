@@ -11,11 +11,11 @@
         def acts_as_loggable(opts={})
           has_many :logs, as: :loggable, class_name: "Tempora::Logging::Log"
           include LoggableMethods
-          extend LoggerClassMethods
+          extend LoggableClassMethods
         end
       end
 
-      module LoggerClassMethods
+      module LoggableClassMethods
         def is_loggable?
           true
         end
