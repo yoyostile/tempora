@@ -1,4 +1,4 @@
-module Tempora
+  module Tempora
   module Logging
     module Loggable
       extend ActiveSupport::Concern

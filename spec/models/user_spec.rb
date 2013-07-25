@@ -23,4 +23,10 @@ describe User do
     user.followings.count.should == 1
   end
 
+  it "should have an list with all associated loggables" do
+    artist = FactoryGirl.create :artist
+    Following.create artist: artist, user: user
+    user.association_list(Artist).length.should == 1
+  end
+
 end

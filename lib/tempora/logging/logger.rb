@@ -57,6 +57,12 @@ module Tempora
           end
           assoc.present?
         end
+
+        def association_list loggable_class
+          if loggable_class.is_loggable?
+            assoc = self.send(self.class.loggable_assoc.select{ |a| a.klass == loggable_class }.first.plural_name)
+          end
+        end
       end
     end
   end

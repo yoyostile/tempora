@@ -24,19 +24,20 @@ module Tempora
         gl_ratings = {}
         logger_class.find_each do |logger|
           ratings = {}
-          loggable_class.find_each do |loggable|
-            log = logger.logs.where(loggable_id: loggable.id, loggable_type: loggable.class)
-            grouped_events = log.count(group: :event)
+          logger_logs = logger.logs.group(:loggable_id)
+          logger_logs.each do |log|
+            loggable = log.loggable_type.constantize.find(log.loggable_id)
+            grouped_events = logger.logs.where(loggable_id: loggable.id).count(group: :event)
             grouped_events.each do |k, e|
               weight = Tempora::Logging::Event.find_by_name(k).try(:weight)
               r = (weight * e > MAX_RATING) ? MAX_RATING : weight * e if weight
               r = MAX_RATING if logger.assoc_with? loggable
               ratings["#{loggable_class}::#{loggable.id}"] = r
             end
-            if log.empty?
-              r = MAX_RATING if logger.assoc_with? loggable
-              ratings["#{loggable_class}::#{loggable.id}"] = r if r
-            end
+          end
+          logger_assocs = logger.association_list loggable_class
+          logger_assocs.each do |loggable|
+            ratings["#{loggable.class}::#{loggable.id}"] = MAX_RATING
           end
           gl_ratings[Tempora::KeyMapper.logger_key logger] = ratings if ratings.present?
         end
