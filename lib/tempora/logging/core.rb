@@ -24,7 +24,11 @@ module Tempora
         gl_ratings = {}
         logger_class.find_each do |logger|
           ratings = {}
-          logger_logs = logger.logs.group(:loggable_id)
+          temp_logs = logger.logs.group_by{ |a| a.loggable_id }
+          logger_logs = []
+          temp_logs.each do |logger_log|
+            logger_logs.push logger_log.last.first
+          end
           logger_logs.each do |log|
             loggable = log.loggable_type.constantize.find(log.loggable_id)
             grouped_events = logger.logs.where(loggable_id: loggable.id).count(group: :event)
