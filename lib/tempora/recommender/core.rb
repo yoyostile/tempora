@@ -65,7 +65,7 @@ module Tempora
             next if items_b.empty?
             reg2 = /(?<loggable>\w+)::(?<loggable_id>\d+)/.match items_b.keys.first
             loggable = reg2["loggable"].constantize.find reg2["loggable_id"]
-            list.push loggable
+            list.push loggable unless list.include? loggable
           end
           list
         end
