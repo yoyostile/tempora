@@ -2,6 +2,11 @@ module Tempora
   module Recommender
     class Core
       class << self
+
+        # Calculates the similarity between two loggers
+        # @param logger_a
+        # @param logger_b
+        # @return [Integer] similarity between -1 (lowest similarity) and 1 (highest similarity)
         def similarity logger_a, logger_b
           diff = diff_items logger_a, logger_b
           return -1 if diff.empty?
@@ -29,6 +34,11 @@ module Tempora
           numerator / (Math.sqrt(denominator_a) * Math.sqrt(denominator_b))
         end
 
+        # Calculates the average rating for one logger
+        # Uses all items if diff = nil, otherwise it uses only the items from diff
+        # @param logger
+        # @param diff list of items
+        # @return [Integer] average rating
         def average_rating_for logger, diff = nil
           if diff
             avg_rating = Tempora.redis.hmget Tempora::KeyMapper.logger_key(logger), diff
@@ -39,6 +49,10 @@ module Tempora
           avg_rating = avg_rating.collect{ |s| s.to_f }.sum / avg_rating.length
         end
 
+        # Predicts the rating for a logger and a loggable
+        # @param logger
+        # @param loggable
+        # @return [Integer] predicted rating for the item
         def prediction logger, loggable
           return if Tempora.redis.hget(Tempora::KeyMapper.logger_key(logger), "#{loggable.class}::#{loggable.id}")
           avg = average_rating_for logger
@@ -58,6 +72,10 @@ module Tempora
           avg + (numerator/denominator)
         end
 
+        # Gives a list of recommended items
+        # @param logger
+        # @param items [Integer] - number of items
+        # @return [Array] of items
         def recommendation_list logger, items = 10
           nn = nearest_neighbors_for logger
           list = []
@@ -75,6 +93,9 @@ module Tempora
           list
         end
 
+        # @param logger_a
+        # @param logger_b
+        # @return [Array] keys for all items rated by logger_a AND logger_b
         def diff_items logger_a, logger_b
           items_a = Tempora.redis.hgetall Tempora::KeyMapper.logger_key logger_a
           items_b = Tempora.redis.hgetall Tempora::KeyMapper.logger_key logger_b
@@ -90,6 +111,9 @@ module Tempora
           end
         end
 
+        # @param logger
+        # @param force [boolean] - forces a new generation of nearest neighbors
+        # @return a list of nearest neighbors sorted descending by similarity
         def nearest_neighbors_for logger, force = false
           nn = Tempora.redis.hgetall(Tempora::KeyMapper.nearest_neighbors_key(logger))
           if nn.empty? || force

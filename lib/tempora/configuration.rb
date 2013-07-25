@@ -9,6 +9,7 @@ module Tempora
 
     attr_accessor :nearest_neighbors
 
+    # Initializes configuration
     def initialize
       @redis = $redis || Redis.new(:host => 'localhost', :port => 6379)
       @redis_namespace = "Tempora::#{Rails.env}"

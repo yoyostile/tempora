@@ -7,3 +7,5 @@ spec/dummy/tmp/
 spec/dummy/.sass-cache
 *.lock
 .DS_Store
+doc
+.yardoc

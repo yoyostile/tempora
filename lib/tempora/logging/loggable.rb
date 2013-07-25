@@ -8,6 +8,8 @@
           false
         end
 
+        # Sets needed has_many association, includes and extends.
+        # @param opts {} is optional
         def acts_as_loggable(opts={})
           has_many :logs, as: :loggable, class_name: "Tempora::Logging::Log"
           include LoggableMethods
@@ -20,6 +22,7 @@
           true
         end
 
+        # @return [Array] with found logger associations
         def logger_assoc
           assoc = []
           self.reflections.values.each do |ref|
@@ -45,6 +48,9 @@
           self.class.to_s
         end
 
+        # Is self associated with logger?
+        # @param logger
+        # @return [Boolean]
         def assoc_with? logger
           if logger.is_logger?
             assoc = logger.send(logger.class.loggable_assoc.select{
