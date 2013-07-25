@@ -12,6 +12,11 @@ module Tempora
           items_a = items_a.select{ |k,v| items_b.include? k }
           items_b = items_b.select{ |k,v| items_a.include? k }
 
+          if items_a.values.sum.to_f / items_a.length.to_f == avg_rating_a &&
+            items_b.values.sum.to_f / items_b.length.to_f == avg_rating_b
+            return 1
+          end
+
           numerator = 0
           denominator_a = 0
           denominator_b = 0
@@ -53,7 +58,7 @@ module Tempora
           avg + (numerator/denominator)
         end
 
-        def recommendation_list logger
+        def recommendation_list logger, items = 10
           nn = nearest_neighbors_for logger
           list = []
           items_a = Tempora.redis.hgetall Tempora::KeyMapper.logger_key logger

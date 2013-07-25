@@ -33,6 +33,14 @@ describe Tempora::Recommender::Core do
     # from http://www.hindawi.com/journals/aai/2009/421425/
   end
 
+  it "should generate similarity based on followings" do
+    Following.create user: @user, artist: @artist
+    Following.create user: @user2, artist: @artist
+    Tempora::Logging::Core.process User, Artist
+    sim = Tempora::Recommender::Core.similarity(@user, @user2)
+    sim.should == 1
+  end
+
   it "should give a very low similarity" do
     u1 = { i1: 5, i2: 0 }
     u2 = { i1: 0, i2: 5 }
