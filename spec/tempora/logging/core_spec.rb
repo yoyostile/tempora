@@ -80,6 +80,15 @@ describe Tempora::Logging::Core do
     ratings[Tempora::KeyMapper.logger_key @user]["#{@artist.class}::#{@artist.id}"].should == Tempora::Logging::Core::MAX_RATING
   end
 
+  it 'should not have a nil similarity' do
+    @user.log @artist, event: "Show"
+    Tempora::Logging::Core.process_weights
+    Tempora::Logging::Core.generate_ratings User, Artist
+    sim = Tempora::Recommender::Core.similarity(@user, @user2)
+    sim.should_not be_nil
+    sim.should == -1
+  end
+
   it 'should persist ratings in redis' do
     @user.log @artist, event: "Show"
     @user.log @artist, event: "Show"

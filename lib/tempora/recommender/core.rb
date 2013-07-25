@@ -4,7 +4,7 @@ module Tempora
       class << self
         def similarity logger_a, logger_b
           diff = diff_items logger_a, logger_b
-          return if diff.empty?
+          return -1 if diff.empty?
           avg_rating_a = average_rating_for logger_a, diff
           avg_rating_b = average_rating_for logger_b, diff
           items_a = Tempora.redis.hgetall Tempora::KeyMapper.logger_key logger_a
@@ -62,6 +62,7 @@ module Tempora
             logger_b = reg["logger"].constantize.find reg["logger_id"]
             items_b = Tempora.redis.hgetall Tempora::KeyMapper.logger_key logger_b
             items_b = items_b.select{ |k,v| !items_a.include? k }
+            next if items_b.empty?
             reg2 = /(?<loggable>\w+)::(?<loggable_id>\d+)/.match items_b.keys.first
             loggable = reg2["loggable"].constantize.find reg2["loggable_id"]
             list.push loggable
