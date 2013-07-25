@@ -20,7 +20,7 @@ module Tempora
             denominator_a += (items_a[k].to_f - avg_rating_a)**2
             denominator_b += (items_b[k].to_f - avg_rating_b)**2
           end
-          return 1 if numerator == 0 && (denominator_a == 0 || denominator_b == 0) # or -1. yeah.
+          return -1 if numerator == 0 && (denominator_a == 0 || denominator_b == 0) # or -1. yeah.
           numerator / (Math.sqrt(denominator_a) * Math.sqrt(denominator_b))
         end
 
