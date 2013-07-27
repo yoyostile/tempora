@@ -38,8 +38,11 @@ module Tempora
             logger_logs.push logger_log.last.first
           end
           logger_logs.each do |log|
-            loggable = log.loggable_type.constantize.find(log.loggable_id)
-            grouped_events = logger.logs.where(loggable_id: loggable.id).count(group: :event)
+            loggable = log.loggable_type.constantize.find_by_id(log.loggable_id) || next
+            #Todo: aus der schleife auslagern
+            grouped_events = logger.logs.where(
+                loggable_id: loggable.id, loggable_type: loggable.class
+              ).count(group: :event)
             grouped_events.each do |k, e|
               weight = Tempora::Logging::Event.find_by_name(k).try(:weight)
               r = weight * e if weight

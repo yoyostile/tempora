@@ -8,12 +8,12 @@ module Tempora
         # @param logger_b
         # @return [Integer] similarity between -1 (lowest similarity) and 1 (highest similarity)
         def similarity logger_a, logger_b
-          diff = diff_items logger_a, logger_b
+          diff = get_shared_items logger_a, logger_b
           return -1 if diff.empty?
           avg_rating_a = average_rating_for logger_a, diff
           avg_rating_b = average_rating_for logger_b, diff
-          items_a = Tempora.redis.hgetall Tempora::KeyMapper.logger_key logger_a
-          items_b = Tempora.redis.hgetall Tempora::KeyMapper.logger_key logger_b
+          items_a = get_all_items_for logger_a
+          items_b = get_all_items_for logger_b
           items_a = items_a.select{ |k,v| items_b.include? k }
           items_b = items_b.select{ |k,v| items_a.include? k }
 
@@ -34,6 +34,10 @@ module Tempora
           numerator / (Math.sqrt(denominator_a) * Math.sqrt(denominator_b))
         end
 
+        def get_all_items_for logger
+          Tempora.redis.hgetall Tempora::KeyMapper.logger_key logger
+        end
+
         # Calculates the average rating for one logger
         # Uses all items if diff = nil, otherwise it uses only the items from diff
         # @param logger
@@ -43,7 +47,7 @@ module Tempora
           if diff
             avg_rating = Tempora.redis.hmget Tempora::KeyMapper.logger_key(logger), diff
           else
-            avg_rating = Tempora.redis.hgetall Tempora::KeyMapper.logger_key(logger)
+            avg_rating = get_all_items_for logger
             avg_rating = avg_rating.values
           end
           avg_rating = avg_rating.collect{ |s| s.to_f }.sum / avg_rating.length
@@ -79,11 +83,11 @@ module Tempora
         def recommendation_list logger, items = 10
           nn = nearest_neighbors_for logger
           list = []
-          items_a = Tempora.redis.hgetall Tempora::KeyMapper.logger_key logger
+          items_a = get_all_items_for logger
           nn.each do |k|
             reg = /(?<logger>\w+)::(?<logger_id>\d+)/.match k
             logger_b = reg["logger"].constantize.find reg["logger_id"]
-            items_b = Tempora.redis.hgetall Tempora::KeyMapper.logger_key logger_b
+            items_b = get_all_items_for logger_b
             items_b = items_b.select{ |k,v| !items_a.include? k }
             next if items_b.empty?
             reg2 = /(?<loggable>\w+)::(?<loggable_id>\d+)/.match items_b.keys.first
@@ -96,9 +100,9 @@ module Tempora
         # @param logger_a
         # @param logger_b
         # @return [Array] keys for all items rated by logger_a AND logger_b
-        def diff_items logger_a, logger_b
-          items_a = Tempora.redis.hgetall Tempora::KeyMapper.logger_key logger_a
-          items_b = Tempora.redis.hgetall Tempora::KeyMapper.logger_key logger_b
+        def get_shared_items logger_a, logger_b
+          items_a = get_all_items_for logger_a
+          items_b = get_all_items_for logger_b
           items_a = items_a.select{ |k,v| items_b.include? k }
           items_a.keys
         end
