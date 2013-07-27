@@ -34,8 +34,8 @@ module Tempora
           numerator / (Math.sqrt(denominator_a) * Math.sqrt(denominator_b))
         end
 
-        def get_all_items_for logger
-          Tempora.redis.hgetall Tempora::KeyMapper.logger_key logger
+        def get_all_items_for logger, key = nil
+          Tempora.redis.hgetall(key || Tempora::KeyMapper.logger_key(logger))
         end
 
         # Calculates the average rating for one logger
@@ -81,14 +81,13 @@ module Tempora
         # @param items [Integer] - number of items
         # @return [Array] of items
         def recommendation_list logger, items = 10
-          nn = nearest_neighbors_for logger
           list = []
           items_a = get_all_items_for logger
-          nn.each do |k|
+          nearest_neighbors_for(logger).each do |k|
             reg = /(?<logger>\w+)::(?<logger_id>\d+)/.match k
-            logger_b = reg["logger"].constantize.find reg["logger_id"]
-            items_b = get_all_items_for logger_b
-            items_b = items_b.select{ |k,v| !items_a.include? k }
+            logger_b = reg["logger"].constantize.find_by_id reg["logger_id"]
+            items_b = get_all_items_for logger_b if logger_b
+            items_b = items_b.select{ |k,v| !items_a.include? k } if items_b
             next if items_b.empty?
             reg2 = /(?<loggable>\w+)::(?<loggable_id>\d+)/.match items_b.keys.first
             loggable = reg2["loggable"].constantize.find reg2["loggable_id"]
@@ -119,10 +118,11 @@ module Tempora
         # @param force [boolean] - forces a new generation of nearest neighbors
         # @return a list of nearest neighbors sorted descending by similarity
         def nearest_neighbors_for logger, force = false
-          nn = Tempora.redis.hgetall(Tempora::KeyMapper.nearest_neighbors_key(logger))
+          nnkey = Tempora::KeyMapper.nearest_neighbors_key(logger)
+          nn = get_all_items_for logger, nnkey
           if nn.empty? || force
             generate_nearest_neighbors_for logger
-            nn = Tempora.redis.hgetall(Tempora::KeyMapper.nearest_neighbors_key(logger))
+            nn = get_all_items_for logger, nnkey
           end
           nn.sort_by{|v| v[1].to_f}.reverse[0..Tempora.config.nearest_neighbors].map{ |x| x[0] }
         end
