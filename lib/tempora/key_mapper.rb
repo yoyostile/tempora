@@ -3,21 +3,14 @@ module Tempora
     class << self
       # @param logger
       # @return the redis-key for the given logger object
-      def logger_key logger
-        if logger.is_logger?
-          "#{Tempora.config.redis_namespace}::#{logger.class}::#{logger.id}"
-        else
-          raise Error, "Model is not logger"
-        end
-      end
 
-      # @param loggable
-      # @return the redis-key for the given loggable object
-      def loggable_key loggable
-        if loggable.is_loggable?
-          "#{Tempora.config.redis_namespace}::#{loggable.class}::#{loggable.id}"
-        else
-          raise Error, "Model is not loggable"
+      [:logger, :loggable].each do |key|
+        define_method("#{key}_key") do |model|
+          if model.send("is_#{key}?")
+            "#{Tempora.config.redis_namespace}::#{model.class}::#{model.id}"
+          else
+            raise Error, "Model is not #{key}"
+          end
         end
       end
 
