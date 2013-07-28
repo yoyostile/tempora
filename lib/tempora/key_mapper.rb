@@ -4,12 +4,12 @@ module Tempora
       # @param logger
       # @return the redis-key for the given logger object
 
-      [:logger, :loggable].each do |key|
-        define_method("#{key}_key") do |model|
-          if model.send("is_#{key}?")
+      [:logger, :loggable].each do |type|
+        define_method("#{type}_key") do |model|
+          if model.send("is_#{type}?")
             "#{Tempora.config.redis_namespace}::#{model.class}::#{model.id}"
           else
-            raise Error, "Model is not #{key}"
+            raise Error, "Model is not #{type}"
           end
         end
       end

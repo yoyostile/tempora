@@ -32,11 +32,7 @@ module Tempora
         gl_ratings = {}
         logger_class.find_each do |logger|
           ratings = {}
-          temp_logs = logger.logs.group_by{ |a| a.loggable_id }
-          logger_logs = []
-          temp_logs.each do |logger_log|
-            logger_logs.push logger_log.last.first
-          end
+          logger_logs = logger.logs.group_by{ |a| a.loggable_id }.map(&:last).map(&:first)
           logger_logs.each do |log|
             loggable = log.loggable_type.constantize.find_by_id(log.loggable_id) || next
             #Todo: aus der schleife auslagern

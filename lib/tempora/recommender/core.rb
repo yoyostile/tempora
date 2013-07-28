@@ -3,6 +3,9 @@ module Tempora
     class Core
       class << self
 
+        LOGGER_REG = /(?<logger>\w+)::(?<logger_id>\d+)/
+        LOGGABLE_REG = /(?<loggable>\w+)::(?<loggable_id>\d+)/
+
         # Calculates the similarity between two loggers
         # @param logger_a
         # @param logger_b
@@ -65,7 +68,7 @@ module Tempora
           numerator = 0
           denominator = 0
           nn.each do |k|
-            reg = /(?<logger>\w+)::(?<logger_id>\d+)/.match k
+            reg = LOGGER_REG.match k
             logger_b = reg["logger"].constantize.find reg["logger_id"]
             r_b = Tempora.redis.hget(Tempora::KeyMapper.logger_key(logger_b), "#{loggable.class}::#{loggable.id}").to_f
             avg_b = average_rating_for logger_b
@@ -84,12 +87,12 @@ module Tempora
           list = []
           items_a = get_all_items_for logger
           nearest_neighbors_for(logger).each do |k|
-            reg = /(?<logger>\w+)::(?<logger_id>\d+)/.match k
+            reg = LOGGER_REG.match k
             logger_b = reg["logger"].constantize.find_by_id reg["logger_id"]
             items_b = get_all_items_for logger_b if logger_b
             items_b = items_b.select{ |k,v| !items_a.include? k } if items_b
             next if items_b.empty?
-            reg2 = /(?<loggable>\w+)::(?<loggable_id>\d+)/.match items_b.keys.first
+            reg2 = LOGGABLE_REG.match items_b.keys.first
             loggable = reg2["loggable"].constantize.find reg2["loggable_id"]
             list.push loggable unless list.include? loggable
           end
