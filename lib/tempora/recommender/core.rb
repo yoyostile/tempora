@@ -11,6 +11,7 @@ module Tempora
         # @param logger_b
         # @return [Integer] similarity between -1 (lowest similarity) and 1 (highest similarity)
         def similarity logger_a, logger_b
+          return unless logger_a.is_logger? || logger_b.is_logger?
           diff = get_shared_items logger_a, logger_b
           return -1 if diff.empty?
           avg_rating_a = average_rating_for logger_a, diff
@@ -112,8 +113,9 @@ module Tempora
         def generate_nearest_neighbors_for logger
           logger.class.find_each do |logger_b|
             next if logger == logger_b
+            sim = similarity(logger, logger_b)
             Tempora.redis.hset(Tempora::KeyMapper.nearest_neighbors_key(logger),
-              "#{logger_b.class}::#{logger_b.id}", similarity(logger, logger_b))
+              "#{logger_b.class}::#{logger_b.id}", sim) #if sim > -1
           end
         end
 
