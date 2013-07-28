@@ -39,6 +39,17 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = "random"
   config.before(:each) do
+    unless example.metadata[:skip_before]
+      Tempora.redis.keys("#{Tempora.config.redis_namespace}*").each do |k|
+        Tempora.redis.del k
+      end
+    end
+  end
+
+  config.after(:all) do
+    User.delete_all
+    Artist.delete_all
+    Following.delete_all
     Tempora.redis.keys("#{Tempora.config.redis_namespace}*").each do |k|
       Tempora.redis.del k
     end

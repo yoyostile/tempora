@@ -14,6 +14,9 @@ module Tempora
           return unless logger_a.is_logger? || logger_b.is_logger?
           diff = get_shared_items logger_a, logger_b
           return -1 if diff.empty?
+          if diff.length > 1
+            byebug
+          end
           avg_rating_a = average_rating_for logger_a, diff
           avg_rating_b = average_rating_for logger_b, diff
           items_a = get_all_items_for logger_a
@@ -87,6 +90,7 @@ module Tempora
         def recommendation_list logger, items = 10
           list = []
           items_a = get_all_items_for logger
+          byebug
           nearest_neighbors_for(logger).each do |k|
             reg = LOGGER_REG.match k
             logger_b = reg["logger"].constantize.find_by_id reg["logger_id"]
