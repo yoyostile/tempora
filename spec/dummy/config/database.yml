@@ -1,6 +1,6 @@
 defaults: &defaults
   adapter: postgresql
-  pool: 15
+  pool: 5010
   min_messages: warning
 
 development:
