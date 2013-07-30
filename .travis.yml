@@ -18,8 +18,8 @@ gemfile:
 matrix:
   exclude:
     - rvm: 1.9.3
-      gemfile: Gemfile
+      gemfile: Gemfile.ruby2.0
       env: "RAILS_VERSION=3.2.13"
     - rvm: 1.9.3
-      gemfile: Gemfile
+      gemfile: Gemfile.ruby2.0
       env: "RAILS_VERSION=4.0.0"
