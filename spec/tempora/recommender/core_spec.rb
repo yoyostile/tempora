@@ -57,10 +57,10 @@ describe Tempora::Recommender::Core do
     Tempora::Recommender::Core.similarity(@user, @user2).should be_within(0.01).of(1)
   end
 
-  it "should return if user already has a rating for an item" do
-    generate_stuff
-    Tempora::Recommender::Core.prediction(@user, @artist).should be_nil
-  end
+  # it "should return if user already has a rating for an item" do
+  #   generate_stuff
+  #   Tempora::Recommender::Core.prediction(@user, @artist).should be_nil
+  # end
 
   it "should generate nearest neighbors for user" do
     generate_table

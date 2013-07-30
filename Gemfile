@@ -1,4 +1,5 @@
 source "http://rubygems.org"
+ruby '1.9.3', :engine => 'jruby', :engine_version => '1.7.4'
 
 # Declare your gem's dependencies in tempora.gemspec.
 # Bundler will treat runtime dependencies like base dependencies, and
@@ -7,13 +8,13 @@ gemspec
 
 # jquery-rails is used by the dummy application
 gem "jquery-rails"
-
+gem 'activerecord-jdbcpostgresql-adapter'
 # Declare any dependencies that are still in development here instead of in
 # your gemspec. These might include edge Rails or gems from your path or
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
 
 # To use debugger
-gem 'debugger'
-gem 'byebug'
+#gem 'debugger'
+#gem 'byebug'
 

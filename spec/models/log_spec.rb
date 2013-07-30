@@ -14,7 +14,7 @@ describe Tempora::Logging::Log do
   it "should have a logger and a loggable" do
     user.log artist
     user.logs.count.should > 0
-    user.logs.where('loggable_id == ?', artist.id).count.should == 1
+    user.logs.where(loggable_id: artist.id).count.should == 1
     user.logs.first.loggable.should == artist
   end
 

@@ -10,8 +10,9 @@ script:
   - bundle exec rake app:db:test:prepare
   - bundle exec rspec spec/
 gemfile:
-  - Gemfile
+#  - Gemfile
   - Gemfile.ruby1.9
+  - Gemfile.ruby2.0
 matrix:
   exclude:
     - rvm: 1.9.3

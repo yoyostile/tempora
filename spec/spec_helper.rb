@@ -3,7 +3,7 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../dummy/config/environment", __FILE__)
 require 'rspec/rails'
 require 'rspec/autorun'
-require 'ruby-debug'
+# require 'ruby-debug'
 require 'factory_girl_rails'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
@@ -38,6 +38,7 @@ RSpec.configure do |config|
   # the seed, which is printed after each run.
   #     --seed 1234
   config.order = "random"
+  config.filter_run_excluding :broken => true
   config.before(:each) do
     unless example.metadata[:skip_before]
       Tempora.redis.keys("#{Tempora.config.redis_namespace}*").each do |k|
