@@ -1,0 +1,15 @@
+User.count:		 10
+Artist.count:		 100
+Ratings.count:		 781
+RMSE:			 5.677962962271852
+
+User.count:		 50
+Artist.count:		 100
+Ratings.count:		 3664
+RMSE:			 3.7535116470329073
+
+User.count:		 100
+Artist.count:		 100
+Ratings.count:		 7305
+RMSE:			 3.6876650533117594
+

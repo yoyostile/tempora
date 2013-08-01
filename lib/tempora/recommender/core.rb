@@ -78,11 +78,12 @@ module Tempora
             reg = LOGGER_REG.match k
             logger_b = reg["logger"].constantize.find reg["logger_id"]
             r_b = Tempora.redis.hget(Tempora::KeyMapper.logger_key(logger_b), "#{loggable.class}::#{loggable.id}").to_f
+            next if r_b == 0
             avg_b = average_rating_for logger_b
             numerator += similarity(logger, logger_b) * (r_b - avg_b)
             denominator += similarity logger, logger_b
           end
-
+          return avg if numerator == 0 || denominator == 0
           avg + (numerator/denominator)
         end
 
@@ -121,7 +122,7 @@ module Tempora
             next if logger == logger_b
             sim = similarity(logger, logger_b)
             Tempora.redis.hset(Tempora::KeyMapper.nearest_neighbors_key(logger),
-              "#{logger_b.class}::#{logger_b.id}", sim) #if sim > -0.5
+              "#{logger_b.class}::#{logger_b.id}", sim) if sim > -0.5
           end
         end
 
