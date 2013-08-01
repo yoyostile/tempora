@@ -13,3 +13,8 @@ Artist.count:		 100
 Ratings.count:		 7305
 RMSE:			 3.6876650533117594
 
+User.count:		 1000 
+Artist.count:		 100 
+Ratings.count:		 70675 
+RMSE:			 3.906874992109082 
+
