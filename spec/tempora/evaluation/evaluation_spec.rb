@@ -24,7 +24,7 @@ describe "Evaluation" do#, broken: true do
       end
       # p j
       j += 1
-      break if j > 1000
+      break if j > 500
     end
     Tempora::Logging::Core.persist_hash gl_ratings
   end
