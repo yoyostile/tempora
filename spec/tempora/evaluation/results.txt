@@ -1,25 +1,93 @@
-User.count:		 10
-Artist.count:		 100
-Ratings.count:		 781
-RMSE:			 5.677962962271852
-
-User.count:		 50
-Artist.count:		 100
-Ratings.count:		 3664
-RMSE:			 3.7535116470329073
-
-User.count:		 100
-Artist.count:		 100
-Ratings.count:		 7305
-RMSE:			 3.6876650533117594
-
-User.count:		 1000 
+User.count:		 2 
 Artist.count:		 100 
-Ratings.count:		 70675 
-RMSE:			 3.906874992109082 
+Ratings.count:		 174 
+Duration:		 1.094625 
+RMSE:			 6.1743240657821366 
 
-User.count:		 500 
+User.count:		 4 
 Artist.count:		 100 
-Ratings.count:		 35861 
-RMSE:			 3.8719927033233805 
+Ratings.count:		 271 
+Duration:		 2.774876 
+RMSE:			 8.653013349219679 
 
+User.count:		 6 
+Artist.count:		 100 
+Ratings.count:		 462 
+Duration:		 7.863335 
+RMSE:			 7.021339269581911 
+
+User.count:		 8 
+Artist.count:		 100 
+Ratings.count:		 609 
+Duration:		 13.613334 
+RMSE:			 18.830005824503655 
+
+User.count:		 10 
+Artist.count:		 100 
+Ratings.count:		 781 
+Duration:		 22.476275 
+RMSE:			 5.676117623148162 
+
+User.count:		 12 
+Artist.count:		 100 
+Ratings.count:		 917 
+Duration:		 31.206404 
+RMSE:			 7.8300884626351515 
+
+User.count:		 14 
+Artist.count:		 100 
+Ratings.count:		 1064 
+Duration:		 42.159562 
+RMSE:			 5.407873095405168 
+
+User.count:		 16 
+Artist.count:		 100 
+Ratings.count:		 1264 
+Duration:		 58.600354 
+RMSE:			 274.975204495322 
+
+User.count:		 18 
+Artist.count:		 100 
+Ratings.count:		 1415 
+Duration:		 73.034506 
+RMSE:			 7.095645575342903 
+
+User.count:		 20 
+Artist.count:		 100 
+Ratings.count:		 1517 
+Duration:		 86.115025 
+RMSE:			 7.024041624574825 
+
+User.count:		 30 
+Artist.count:		 100 
+Ratings.count:		 2167 
+Duration:		 129.180324 
+RMSE:			 17.34860601635962 
+
+User.count:		 40 
+Artist.count:		 100 
+Ratings.count:		 2870 
+Duration:		 171.276532 
+RMSE:			 3.6690647289318896 
+
+User.count:		 50 
+Artist.count:		 100 
+Ratings.count:		 3664 
+Duration:		 235.155 
+RMSE:			 3.7535116470329073 
+
+User.count:		 100 
+Artist.count:		 100 
+Ratings.count:		 7305 
+Duration:		 531.197577 
+RMSE:			 3.6876650533117594 
+
+User.count:    500 
+Artist.count:    100 
+Ratings.count:     35861 
+RMSE:      3.8719927033233805 
+
+User.count:    1000 
+Artist.count:    100 
+Ratings.count:     70675 
+RMSE:      3.906874992109082 

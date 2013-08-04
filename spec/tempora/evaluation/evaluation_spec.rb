@@ -24,7 +24,7 @@ describe "Evaluation" do#, broken: true do
       end
       # p j
       j += 1
-      break if j > 500
+      break if j > 1500
     end
     Tempora::Logging::Core.persist_hash gl_ratings
   end
@@ -46,6 +46,7 @@ describe "Evaluation" do#, broken: true do
     length = User.count
     threads = []
     i = 0
+    start_time = Time.new
     User.find_in_batches(batch_size: 8) do |user_batch|
       user_batch.each do |user|
         # threads << Thread.new {
@@ -90,6 +91,7 @@ describe "Evaluation" do#, broken: true do
     s += "User.count:\t\t #{User.count} \n"
     s += "Artist.count:\t\t #{Artist.count} \n"
     s += "Ratings.count:\t\t #{y.length} \n"
+    s += "Duration:\t\t #{Time.new - start_time} \n"
     s += "RMSE:\t\t\t #{rmse} \n"
     s += "\n"
     p s
