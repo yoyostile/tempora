@@ -91,3 +91,10 @@ User.count:    1000
 Artist.count:    100 
 Ratings.count:     70675 
 RMSE:      3.906874992109082 
+
+User.count:		 1500 
+Artist.count:		 100 
+Ratings.count:		 106142 
+Duration:		 29098.141011 
+RMSE:			 3.9529423512155413 
+
