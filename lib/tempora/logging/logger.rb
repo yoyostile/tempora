@@ -19,8 +19,8 @@ module Tempora
       # @param loggable item to log
       # @param opts {}
       def log(loggable, opts={})
-        return false unless loggable.respond_to?(:is_loggable?) && loggable.is_loggable?
-        logs.create loggable: loggable, event: "#{loggable.class.to_s}::#{opts[:event]}"
+        return false unless loggable.is_loggable?
+        logs.create loggable: loggable, event: "#{loggable.class}::#{opts[:event]}"
       end
 
       def ratings
@@ -37,10 +37,6 @@ module Tempora
 
       def is_logger?
         true
-      end
-
-      def is_loggable?
-        false
       end
 
       # Is self associated with loggable?

@@ -19,14 +19,6 @@
         true
       end
 
-      def is_logger?
-        false
-      end
-
-      def type
-        self.class.to_s
-      end
-
       # Is self associated with logger?
       # @param logger
       # @return [Boolean]
