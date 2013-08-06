@@ -24,13 +24,7 @@
 
         # @return [Array] with found logger associations
         def logger_assoc
-          assoc = []
-          self.reflections.values.each do |ref|
-            if ref.klass.is_logger?
-              assoc.push ref
-            end
-          end
-          assoc
+          self.reflections.values.select{ |r| r.klass.is_logger? }
         end
       end
 
