@@ -104,3 +104,15 @@ Ratings.count:		 141547
 Duration:		 57255.576756 
 RMSE:			 4.0144834146956665 
 
+User.count:		 2000 
+Artist.count:		 100 
+Ratings.count:		 141547 
+Duration:		 48308.278478 
+RMSE:			 4.0144834146956665 
+
+User.count:		 2500 
+Artist.count:		 100 
+Ratings.count:		 176715 
+Duration:		 66212.857785 
+RMSE:			 4.039945357581988 
+

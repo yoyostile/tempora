@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Evaluation" do#, broken: true do
+describe "Evaluation", broken: true do
 
   before(:all) do
     Tempora.redis.keys('Tempora*').each do |k|
@@ -24,7 +24,7 @@ describe "Evaluation" do#, broken: true do
       end
       # p j
       j += 1
-      break if j > 2000
+      break if j > 2500
     end
     Tempora::Logging::Core.persist_hash gl_ratings
   end
