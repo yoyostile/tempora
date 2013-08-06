@@ -19,7 +19,7 @@ describe Tempora::Recommender::Core do
     Tempora::Logging::Core.process_weights
     ratings = Tempora::Logging::Core.generate_ratings User, Artist
     Tempora::Logging::Core.persist_hash ratings
-    Tempora::Recommender::Core.get_shared_items(@user, @user2).length.should == 1
+    Tempora::Recommender::Core.send(:get_shared_items,@user, @user2).length.should == 1
   end
 
   it "should generate similarity between users" do

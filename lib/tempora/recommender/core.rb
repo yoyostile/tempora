@@ -3,8 +3,7 @@ module Tempora
     class Core
       class << self
 
-        LOGGER_REG = /(?<logger>\w+)::(?<logger_id>\d+)/
-        LOGGABLE_REG = /(?<loggable>\w+)::(?<loggable_id>\d+)/
+        REG = /\A(?<type>\w+)::(?<id>\d+)\Z/
 
         # Calculates the similarity between two loggers
         # @param logger_a
@@ -20,8 +19,8 @@ module Tempora
           avg_rating_b = average_rating_for logger_b, diff
           items_a = get_all_items_for logger_a
           items_b = get_all_items_for logger_b
-          items_a = items_a.select{ |k,v| items_b.include? k }
-          items_b = items_b.select{ |k,v| items_a.include? k }
+          items_a = items_a.select{ |k,_| items_b.include? k }
+          items_b = items_b.select{ |k,_| items_a.include? k }
 
           if items_a.values.sum.to_f / items_a.length.to_f == avg_rating_a &&
             items_b.values.sum.to_f / items_b.length.to_f == avg_rating_b
@@ -37,10 +36,65 @@ module Tempora
             denominator_b += (items_b[k].to_f - avg_rating_b)**2
           end
           return -1 if numerator == 0 && (denominator_a <= 0 || denominator_b <= 0) # or -1. yeah.
-          res = numerator / (Math.sqrt(denominator_a) * Math.sqrt(denominator_b))
-          Tempora.redis.hset(Tempora::KeyMapper.similarity_key(logger_a), "#{logger_b.class}::#{logger_b.id}", res)
-          res
+          (numerator / (Math.sqrt(denominator_a) * Math.sqrt(denominator_b))).tap do |res|
+            Tempora.redis.hset(Tempora::KeyMapper.similarity_key(logger_a), "#{logger_b.class}::#{logger_b.id}", res)
+          end
         end
+
+        # Predicts the rating for a logger and a loggable
+        # @param logger
+        # @param loggable
+        # @return [Integer] predicted rating for the item
+        def prediction logger, loggable
+          rating = Tempora.redis.hget(Tempora::KeyMapper.logger_key(logger), "#{loggable.class}::#{loggable.id}")
+          return rating if rating
+          avg = average_rating_for logger
+          nn = nearest_neighbors_for logger
+
+          numerator = 0
+          denominator = 0
+          nn.each do |k|
+            reg = REG.match k
+            logger_b = reg["type"].constantize.find reg["id"]
+            r_b = Tempora.redis.hget(Tempora::KeyMapper.logger_key(logger_b), "#{loggable.class}::#{loggable.id}").to_f
+            next if r_b == 0
+            avg_b = average_rating_for logger_b
+            numerator += similarity(logger, logger_b) * (r_b - avg_b)
+            denominator += similarity logger, logger_b
+          end
+          denominator == 0 ? avg : avg + (numerator/denominator)
+        end
+
+        # Gives a list of recommended items
+        # @param logger
+        # @param items [Integer] - number of items
+        # @return [Array] of items
+        def recommendation_list logger, items = 10
+          list = []
+          items_a = get_all_items_for logger
+          nearest_neighbors_for(logger).each do |k|
+            reg = REG.match k
+            logger_b = reg["type"].constantize.find_by_id reg["id"]
+            items_b = get_all_items_for logger_b if logger_b
+            items_b = items_b.select{ |k,v| !items_a.include? k } if items_b
+            next if items_b.empty?
+            reg2 = REG.match items_b.keys.first
+            loggable = reg2["type"].constantize.find reg2["id"]
+            list.push loggable unless list.include? loggable
+          end
+          list
+        end
+
+        def generate_nearest_neighbors_for logger
+          logger.class.find_each do |logger_b|
+            next if logger == logger_b
+            sim = similarity(logger, logger_b)
+            Tempora.redis.hset(Tempora::KeyMapper.nearest_neighbors_key(logger),
+              "#{logger_b.class}::#{logger_b.id}", sim) if sim > -0.5
+          end
+        end
+
+      private
 
         def get_all_items_for logger, key = nil
           Tempora.redis.hgetall(key || Tempora::KeyMapper.logger_key(logger))
@@ -62,68 +116,14 @@ module Tempora
           avg_rating = avg_rating.collect{ |s| s.to_f }.sum / avg_rating.length
         end
 
-        # Predicts the rating for a logger and a loggable
-        # @param logger
-        # @param loggable
-        # @return [Integer] predicted rating for the item
-        def prediction logger, loggable
-          rating = Tempora.redis.hget(Tempora::KeyMapper.logger_key(logger), "#{loggable.class}::#{loggable.id}")
-          return rating if rating
-          avg = average_rating_for logger
-          nn = nearest_neighbors_for logger
-
-          numerator = 0
-          denominator = 0
-          nn.each do |k|
-            reg = LOGGER_REG.match k
-            logger_b = reg["logger"].constantize.find reg["logger_id"]
-            r_b = Tempora.redis.hget(Tempora::KeyMapper.logger_key(logger_b), "#{loggable.class}::#{loggable.id}").to_f
-            next if r_b == 0
-            avg_b = average_rating_for logger_b
-            numerator += similarity(logger, logger_b) * (r_b - avg_b)
-            denominator += similarity logger, logger_b
-          end
-          return avg if numerator == 0 || denominator == 0
-          avg + (numerator/denominator)
-        end
-
-        # Gives a list of recommended items
-        # @param logger
-        # @param items [Integer] - number of items
-        # @return [Array] of items
-        def recommendation_list logger, items = 10
-          list = []
-          items_a = get_all_items_for logger
-          nearest_neighbors_for(logger).each do |k|
-            reg = LOGGER_REG.match k
-            logger_b = reg["logger"].constantize.find_by_id reg["logger_id"]
-            items_b = get_all_items_for logger_b if logger_b
-            items_b = items_b.select{ |k,v| !items_a.include? k } if items_b
-            next if items_b.empty?
-            reg2 = LOGGABLE_REG.match items_b.keys.first
-            loggable = reg2["loggable"].constantize.find reg2["loggable_id"]
-            list.push loggable unless list.include? loggable
-          end
-          list
-        end
-
         # @param logger_a
         # @param logger_b
         # @return [Array] keys for all items rated by logger_a AND logger_b
         def get_shared_items logger_a, logger_b
           items_a = get_all_items_for logger_a
           items_b = get_all_items_for logger_b
-          items_a = items_a.select{ |k,v| items_b.include? k }
+          items_a = items_a.select{ |k,_| items_b.include? k }
           items_a.keys
-        end
-
-        def generate_nearest_neighbors_for logger
-          logger.class.find_each do |logger_b|
-            next if logger == logger_b
-            sim = similarity(logger, logger_b)
-            Tempora.redis.hset(Tempora::KeyMapper.nearest_neighbors_key(logger),
-              "#{logger_b.class}::#{logger_b.id}", sim) if sim > -0.5
-          end
         end
 
         # @param logger
