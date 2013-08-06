@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Evaluation" do#, broken: true do
+describe "Evaluation", broken: true do
 
   before(:all) do
     Tempora.redis.keys('Tempora*').each do |k|
