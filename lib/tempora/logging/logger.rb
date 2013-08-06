@@ -57,9 +57,9 @@ module Tempora
       # @return [Array] associated items
       def association_list loggable_class
         if loggable_class.is_loggable?
-          assoc = self.send(self.class.tempora_assoc.select{
+          assoc = self.send(self.class.tempora_assoc.detect{
             |a| a.klass == loggable_class
-          }.first.plural_name)
+          }.plural_name)
         end
       end
     end

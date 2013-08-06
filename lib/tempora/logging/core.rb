@@ -30,25 +30,22 @@ module Tempora
           if Tempora::Logging::Event.count < Tempora::Logging::Log.group('event').count.count
             raise Error, 'You should generate the weights table first'
           end
-          gl_ratings = {}
-          logger_class.find_each do |logger|
-            ratings = {}
-            #byebug
-            logger.logs.grouped_loggables.each do |log|
-              loggable = log.loggable || next
-              #Todo: aus der schleife auslagern
-              logger.logs.grouped_events(loggable).each do |k, e|
-                weight = Tempora::Logging::Event.where(name: k).pluck(:weight).first
-                ratings["#{loggable_class}::#{loggable.id}"] = weight * e
+          Hash.new.tap do |gl_ratings|
+            logger_class.find_each do |logger|
+              ratings = {}
+              logger.logs.grouped_loggables.each do |log|
+                loggable = log.loggable || next
+                logger.logs.grouped_events(loggable).each do |k, e|
+                  weight = Tempora::Logging::Event.where(name: k).pluck(:weight).first
+                  ratings["#{loggable_class}::#{loggable.id}"] = weight * e
+                end
               end
+              logger.association_list(loggable_class).each do |loggable|
+                ratings["#{loggable.class}::#{loggable.id}"] = MAX_RATING
+              end
+              gl_ratings[Tempora::KeyMapper.logger_key logger] = ratings if ratings.present?
             end
-            logger_assocs = logger.association_list loggable_class
-            logger_assocs.each do |loggable|
-              ratings["#{loggable.class}::#{loggable.id}"] = MAX_RATING
-            end
-            gl_ratings[Tempora::KeyMapper.logger_key logger] = ratings if ratings.present?
           end
-          gl_ratings
         end
 
         # Saves Hash to Redis
