@@ -24,13 +24,7 @@ module Tempora
 
         # @return [Array] with found loggable associations
         def loggable_assoc
-          assoc = []
-          self.reflections.values.each do |ref|
-            if ref.klass.is_loggable?
-              assoc.push ref
-            end
-          end
-          assoc
+          self.reflections.values.select{ |r| r.klass.is_loggable? }
         end
       end
 

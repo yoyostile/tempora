@@ -65,7 +65,7 @@ describe Tempora::Recommender::Core do
   it "should generate nearest neighbors for user" do
     generate_table
     Tempora::Recommender::Core.generate_nearest_neighbors_for @user
-    Tempora.redis.hgetall(Tempora::KeyMapper.nearest_neighbors_key(@user)).length.should == 4
+    Tempora.redis.hgetall(Tempora::KeyMapper.nearest_neighbors_key(@user)).length.should == 3
   end
 
   it "should generate a prediction for an unrated item" do
