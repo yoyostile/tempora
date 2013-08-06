@@ -29,4 +29,14 @@ describe User do
     user.association_list(Artist).length.should == 1
   end
 
+  it "should have a similarity" do
+    user2 = FactoryGirl.create :user
+    user.similarity_with(user2).should == -1
+  end
+
+  it "should have some predictions" do
+    artist = FactoryGirl.create :artist
+    user.predict(artist).should == 0
+  end
+
 end

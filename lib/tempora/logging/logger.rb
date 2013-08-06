@@ -48,6 +48,14 @@ module Tempora
           Tempora.redis.hgetall Tempora::KeyMapper.logger_key self
         end
 
+        def similarity_with logger
+          Tempora::Recommender::Core.similarity self, logger
+        end
+
+        def predict loggable
+          Tempora::Recommender::Core.prediction self, loggable
+        end
+
         def is_logger?
           true
         end
