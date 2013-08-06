@@ -1,6 +1,7 @@
 require "tempora/version"
 require "tempora/configuration"
 require "tempora/key_mapper.rb"
+require "tempora/logging/base"
 require "tempora/logging/logger"
 require "tempora/logging/loggable"
 require "tempora/logging/acts_as_logger"

@@ -22,13 +22,8 @@
       # Is self associated with logger?
       # @param logger
       # @return [Boolean]
-      def assoc_with? logger
-        if logger.is_logger?
-          assoc = logger.send(logger.class.tempora_assoc.select{
-            |a| a.klass == self.class
-          }.first.plural_name).exists? self rescue nil
-        end
-        assoc.present?
+      def assoc_with? obj
+        obj.is_logger? && is_tempora_assoc?(obj).present?
       end
     end
   end

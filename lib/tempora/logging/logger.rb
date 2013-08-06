@@ -42,13 +42,8 @@ module Tempora
       # Is self associated with loggable?
       # @param loggable
       # @return [Boolean]
-      def assoc_with? loggable
-        if loggable.is_loggable?
-          assoc = loggable.send(loggable.class.tempora_assoc.select{
-            |a| a.klass == self.class
-          }.first.plural_name).exists? self rescue nil
-        end
-        assoc.present?
+      def assoc_with? obj
+        obj.is_loggable? && is_tempora_assoc?(obj).present?
       end
 
       # @param limit [Integer]

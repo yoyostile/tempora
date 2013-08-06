@@ -16,6 +16,7 @@ module Tempora
         # @param opts {} is optional
         def acts_as_loggable(opts={})
           has_many :logs, as: :loggable, class_name: "Tempora::Logging::Log"
+          include Tempora::Logging::Base
           include Tempora::Logging::Loggable
         end
       end
