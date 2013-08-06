@@ -42,8 +42,8 @@ describe Tempora::Logging::Core do
   it 'should recognize associations' do
     Following.create artist: @artist, user: @user
 
-    User.loggable_assoc.count.should > 0
-    Artist.logger_assoc.count.should > 0
+    User.tempora_assoc.count.should > 0
+    Artist.tempora_assoc.count.should > 0
 
     @artist.assoc_with?(@user).should be_true
     @user.assoc_with?(@artist).should be_true

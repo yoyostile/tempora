@@ -9,7 +9,7 @@
         end
 
         # @return [Array] with found logger associations
-        def logger_assoc
+        def tempora_assoc
           self.reflections.values.select{ |r| r.klass.is_logger? }
         end
       end
@@ -24,7 +24,7 @@
       # @return [Boolean]
       def assoc_with? logger
         if logger.is_logger?
-          assoc = logger.send(logger.class.loggable_assoc.select{
+          assoc = logger.send(logger.class.tempora_assoc.select{
             |a| a.klass == self.class
           }.first.plural_name).exists? self rescue nil
         end

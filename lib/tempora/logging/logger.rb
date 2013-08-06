@@ -9,7 +9,7 @@ module Tempora
         end
 
         # @return [Array] with found loggable associations
-        def loggable_assoc
+        def tempora_assoc
           self.reflections.values.select{ |r| r.klass.is_loggable? }
         end
       end
@@ -44,9 +44,9 @@ module Tempora
       # @return [Boolean]
       def assoc_with? loggable
         if loggable.is_loggable?
-          assoc = loggable.send(loggable.class.logger_assoc.select{
+          assoc = loggable.send(loggable.class.tempora_assoc.select{
             |a| a.klass == self.class
-          }.first.plural_name).find self rescue nil
+          }.first.plural_name).exists? self rescue nil
         end
         assoc.present?
       end
@@ -61,7 +61,7 @@ module Tempora
       # @return [Array] associated items
       def association_list loggable_class
         if loggable_class.is_loggable?
-          assoc = self.send(self.class.loggable_assoc.select{
+          assoc = self.send(self.class.tempora_assoc.select{
             |a| a.klass == loggable_class
           }.first.plural_name)
         end
