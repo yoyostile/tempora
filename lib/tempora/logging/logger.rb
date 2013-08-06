@@ -12,6 +12,7 @@ module Tempora
         def tempora_assoc
           self.reflections.values.select{ |r| r.klass.is_loggable? }
         end
+
       end
 
 
