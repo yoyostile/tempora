@@ -31,7 +31,7 @@ describe "Evaluation", broken: true do
 
   it "should print find nearest neighbors", skip_before: true do
     user = User.first
-    nn = Tempora::Recommender::Core.nearest_neighbors_for user
+    nn = Tempora::Recommender::Core.send :nearest_neighbors_for, user
     nn.length.should > 0
   end
 
