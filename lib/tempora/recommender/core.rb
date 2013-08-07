@@ -90,7 +90,7 @@ module Tempora
             next if logger == logger_b
             sim = similarity(logger, logger_b)
             Tempora.redis.hset(Tempora::KeyMapper.nearest_neighbors_key(logger),
-              "#{logger_b.class}::#{logger_b.id}", sim) if sim > -0.5
+              "#{logger_b.class}::#{logger_b.id}", sim) if sim > Tempora.config.minimal_similarity
           end
         end
 
