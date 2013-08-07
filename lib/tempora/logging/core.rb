@@ -1,7 +1,7 @@
 module Tempora
   module Logging
     class Core
-      MAX_RATING = 100
+      MAX_RATING = Tempora.config.max_rating
       class << self
 
         # Triggers all necessary processing steps

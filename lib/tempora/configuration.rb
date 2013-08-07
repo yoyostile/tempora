@@ -11,12 +11,15 @@ module Tempora
 
     attr_accessor :minimal_similarity
 
+    attr_accessor :max_rating
+
     # Initializes configuration
     def initialize
       @redis = $redis || Redis.new(:host => 'localhost', :port => 6379)
       @redis_namespace = "Tempora::#{Rails.env}"
       @nearest_neighbors = 20
       @minimal_similarity = -0.5
+      @max_rating = 100
     end
   end
 
