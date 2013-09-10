@@ -14,7 +14,7 @@ module Tempora
           res = Tempora.redis.hget(Tempora::KeyMapper.similarity_key(logger_a), "#{logger_b.class}::#{logger_b.id}")
           return res.to_f if res && !force
           diff = get_shared_items logger_a, logger_b
-          return -1 if diff.empty?
+          return -1 if diff.nil? || diff.empty?
           avg_rating_a = average_rating_for logger_a, diff
           avg_rating_b = average_rating_for logger_b, diff
           items_a = get_all_items_for logger_a
@@ -77,7 +77,7 @@ module Tempora
             logger_b = reg["type"].constantize.find_by_id reg["id"]
             items_b = get_all_items_for logger_b if logger_b
             items_b = items_b.select{ |k,v| !items_a.include? k } if items_b
-            next if items_b.empty?
+            next if items_b.nil? || items_b.empty?
             reg2 = REG.match items_b.keys.first
             loggable = reg2["type"].constantize.find reg2["id"]
             list.push loggable unless list.include? loggable
@@ -112,7 +112,7 @@ module Tempora
             avg_rating = get_all_items_for logger
             avg_rating = avg_rating.values
           end
-          return 0 if avg_rating.empty?
+          return 0 if avg_rating.nil? || avg_rating.empty?
           avg_rating = avg_rating.collect{ |s| s.to_f }.sum / avg_rating.length
         end
 
@@ -132,7 +132,7 @@ module Tempora
         def nearest_neighbors_for logger, force = false
           nnkey = Tempora::KeyMapper.nearest_neighbors_key(logger)
           nn = get_all_items_for logger, nnkey
-          if nn.empty? || force
+          if nn.nil? || nn.empty? || force
             generate_nearest_neighbors_for logger
             nn = get_all_items_for logger, nnkey
           end
